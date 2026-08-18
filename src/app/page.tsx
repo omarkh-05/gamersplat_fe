@@ -1,3 +1,5 @@
+import Home from "./home/page";
+
 export default function Page() {
-  return <h1>GamersPlat Test</h1>;
+  return <Home />;
 }
