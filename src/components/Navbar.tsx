@@ -173,14 +173,24 @@ export const Navbar = () => {
           )}
         </div>
 
-        <button
-          className="md:hidden p-2 rounded-lg hover:bg-muted"
-          onClick={() => setOpen((o) => !o)}
-          aria-label={open ? t("nav.closeMenu") : t("nav.openMenu")}
-          aria-expanded={open}
-        >
-          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
+        <div className="flex items-center gap-2 md:hidden">
+          <Button
+            variant="outline"
+            size="sm"
+            aria-label={t("nav.language")}
+            onClick={() => setLang(otherLang.value)}
+          >
+            <Languages className="h-4 w-4" /> {otherLang.short}
+          </Button>
+          <button
+            className="p-2 rounded-lg hover:bg-muted"
+            onClick={() => setOpen((o) => !o)}
+            aria-label={open ? t("nav.closeMenu") : t("nav.openMenu")}
+            aria-expanded={open}
+          >
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
       </nav>
 
       {open && (
