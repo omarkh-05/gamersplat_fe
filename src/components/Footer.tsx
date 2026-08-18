@@ -57,11 +57,13 @@ export const Footer = () => {
                 {t("nav.about")}
               </Link>
             </li>
+            {/*
             <li>
               <Link href="/profile" className="hover:text-primary">
                 {t("nav.myProfile")}
               </Link>
             </li>
+            */}
             <li>
               <Link href="/login" className="hover:text-primary">
                 {t("nav.login")}
@@ -84,7 +86,7 @@ export const Footer = () => {
             © {new Date().getFullYear()} GamersPlat. {t("footer.rights")}
           </p>
           <p className="font-mono">
-            {t("footer.madeBy")} <span className="text-primary">Omar</span> —{" "}
+            {t("footer.madeBy")} <span className="text-primary">Omar/Bahaa</span> —{" "}
             {t("footer.enjoy")}
           </p>
         </div>

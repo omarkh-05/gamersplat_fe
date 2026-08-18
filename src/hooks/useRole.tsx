@@ -26,22 +26,19 @@ const RoleContext = createContext<RoleContextValue>({
 const STORAGE_KEY = "gamersplat.role";
 
 export const RoleProvider = ({ children }: { children: React.ReactNode }) => {
-  const [role, setRoleState] = useState<Role>("guest");
-  const [hydrated, setHydrated] = useState(false);
+  const [role, setRoleState] = useState<Role>(() => {
+    if (typeof window === "undefined") return "guest";
+    const saved = window.localStorage.getItem(STORAGE_KEY) as Role | null;
+    return saved ?? "guest";
+  });
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const saved = window.localStorage.getItem(STORAGE_KEY) as Role | null;
-    setRoleState(saved ?? "guest");
-    setHydrated(true);
-  }, []);
-
-  useEffect(() => {
-    if (!hydrated || typeof window === "undefined") return;
     window.localStorage.setItem(STORAGE_KEY, role);
-  }, [role, hydrated]);
+  }, [role]);
 
   const setRole = useCallback((next: Role) => setRoleState(next), []);
+
   const signOut = useCallback(() => setRoleState("guest"), []);
 
   const value = useMemo(

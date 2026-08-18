@@ -22,7 +22,7 @@ const LoginContent = () => {
   const [tab, setTab] = useState(
     searchParams.get("tab") === "signup" ? "signup" : "login",
   );
-  const [account, setAccount] = useState<Account>("player");
+  const [account, setAccount] = useState<Account>("owner");
   const router = useRouter();
   const { toast } = useToast();
   const { setRole } = useRole();
@@ -31,25 +31,25 @@ const LoginContent = () => {
   const go = (role: Role, path: string, title: string) => {
     setRole(role);
     toast({ title, description: t("login.demoAuthDesc") });
-    setTimeout(() => router.push(path), 600);
+    router.push(path);
   };
 
   const onLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    const email =
-      new FormData(e.target as HTMLFormElement).get("email")?.toString() ?? "";
-    if (email.startsWith("admin"))
-      return go("admin", "/admin", t("login.toastWelcomeAdmin"));
-    if (email.startsWith("owner"))
-      return go("owner", "/owner", t("login.toastWelcomeOwner"));
-    go("player", "/profile", t("login.toastWelcomePlayer"));
+    const email = (
+      new FormData(e.target as HTMLFormElement).get("email")?.toString() ?? ""
+    ).toLowerCase();
+
+    if (email.startsWith("admin")) {
+      return go("owner", "/owner", t("login.toastWelcomeAdmin"));
+    }
+
+    return go("owner", "/owner", t("login.toastWelcomeOwner"));
   };
 
   const onSignup = (e: React.FormEvent) => {
     e.preventDefault();
-    if (account === "owner")
-      go("owner", "/owner", t("signup.toastOwnerCreated"));
-    else go("player", "/profile", t("signup.toastPlayerCreated"));
+    return go("owner", "/owner", t("signup.toastOwnerCreated"));
   };
 
   return (

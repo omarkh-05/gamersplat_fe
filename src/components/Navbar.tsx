@@ -30,7 +30,7 @@ export const Navbar = () => {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
-  const { role, setRole, signOut } = useRole();
+  const { role, signOut } = useRole();
   const { t, lang, setLang } = useI18n();
 
   const publicLinks = [
@@ -42,22 +42,24 @@ export const Navbar = () => {
 
   const roleLinks: Record<Role, { to: string; label: string }[]> = {
     guest: publicLinks,
-    player: publicLinks,
     owner: publicLinks,
+    player: publicLinks,
     admin: publicLinks,
   };
-
   const roleHome: Record<Role, string> = {
     guest: "/login",
-    player: "/profile",
     owner: "/owner",
-    admin: "/admin",
+    // Hidden from the dashboard role switcher in the web UI.
+    // player: "/profile",
+    // admin: "/admin",
+    player: "",
+    admin: "",
   };
 
   const roleLabel: Record<Role, string> = {
     guest: t("role.guest", {}, "Guest"),
-    player: t("role.player", {}, "Player"),
     owner: t("role.owner", {}, "Center Owner"),
+    player: t("role.player", {}, "Player"),
     admin: t("role.admin", {}, "Administrator"),
   };
 
@@ -72,10 +74,9 @@ export const Navbar = () => {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => setOpen(false), [pathname]);
-
   const handleSignOut = () => {
     signOut();
+    setOpen(false);
     router.push("/");
   };
 
@@ -107,7 +108,7 @@ export const Navbar = () => {
           </span>
         </Link>
 
-        <ul className="hidden md:flex flex-1 items-center justify-center gap-1">
+        <ul className="hidden md:flex flex-1 items-center justify-center gap-1 absolute left-1/2 -translate-x-1/2">
           {links.map((l) => (
             <li key={l.to}>
               <Link
@@ -164,21 +165,6 @@ export const Navbar = () => {
                   <Languages className="h-4 w-4" /> {otherLang.short}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
-                  {t("nav.previewRole")}
-                </DropdownMenuLabel>
-                {(["player", "owner", "admin"] as Role[]).map((r) => (
-                  <DropdownMenuItem
-                    key={r}
-                    onClick={() => {
-                      setRole(r);
-                      router.push(roleHome[r]);
-                    }}
-                  >
-                    {roleLabel[r]}
-                  </DropdownMenuItem>
-                ))}
-                <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignOut}>
                   <LogOut className="h-4 w-4" /> {t("nav.signout")}
                 </DropdownMenuItem>
@@ -207,6 +193,7 @@ export const Navbar = () => {
               <li key={l.to}>
                 <Link
                   href={l.to}
+                  onClick={() => setOpen(false)}
                   className={cn(
                     "block px-3 py-2.5 rounded-lg text-sm font-medium",
                     pathname === l.to ||
@@ -227,13 +214,24 @@ export const Navbar = () => {
                   </Button>
                 </>
               ) : (
-                <Button
-                  variant="outline"
-                  className="flex-1"
-                  onClick={handleSignOut}
-                >
-                  <LogOut className="h-4 w-4" /> {t("nav.signout")}
-                </Button>
+                <>
+                  <Button asChild variant="outline" className="flex-1">
+                    <Link href="/owner" onClick={() => setOpen(false)}>
+                      <LayoutDashboard className="h-4 w-4" />{" "}
+                      {t("nav.myDashboard")}
+                    </Link>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="flex-1"
+                    onClick={() => {
+                      setOpen(false);
+                      handleSignOut();
+                    }}
+                  >
+                    <LogOut className="h-4 w-4" /> {t("nav.signout")}
+                  </Button>
+                </>
               )}
             </li>
           </ul>

@@ -7,7 +7,11 @@ export default function ContactUsPage() {
         </p>
         <h1 className="text-4xl font-bold">Contact us</h1>
         <p className="mt-4 text-lg text-slate-300">
-          This contact page is ready for form implementation.
+         implementation Soon.
+         <br />
+         Omar Khalid / Phone: 0796780368
+         <br />
+         Bahaa Ahmad / Phone: 0787430123
         </p>
       </section>
     </main>
